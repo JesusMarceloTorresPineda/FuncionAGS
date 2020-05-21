@@ -9,13 +9,14 @@ all_fitness=[]
 mejorfit=[]
 mejorfit_gen=[]
 peorfit_gen=[]
+promfit_gen=[]
 prob_wheel_roulette=[]
 aux_fitness=[]
+
 
 def seleccion(initial_population):
    global aux_fitness
    funcion_generacion=[]
-   best_generation=[]
    retorno_gen=[]
    evaluate_this=[]
    aux_fitness=[]
@@ -45,7 +46,10 @@ def seleccion(initial_population):
    
    maximo_gen=max(aux_fitness)
    minimo_gen=min(aux_fitness)
-   best_generation.extend([maximo_gen, minimo_gen, prom_fitness])
+   mejorfit_gen.append(maximo_gen)
+   peorfit_gen.append(minimo_gen)
+   promfit_gen.append(prom_fitness)
+   #best_generation.extend([maximo_gen, minimo_gen, prom_fitness])
    aux_fitness.sort()
    tamanio_auxfit = len(aux_fitness)
    best_retorno=aux_fitness[tamanio_auxfit-1]
@@ -103,14 +107,14 @@ def mutation(datos):
       
       
 def generate_pulation(maximo, tamaño_poblacion): # Poblacion inicial
-   for i in range(tamaño_poblacion):
+   while len(initial_population) < tamaño_poblacion:
       individuo = random.randint(1,maximo)
       print(individuo)
       if len(initial_population) == 0:
          print("arreglo vacio, agrego primer individuo")
          initial_population.extend([individuo])
       else:
-         if individuo == initial_population[i-1]:
+         if individuo in initial_population:
             print(individuo ," es numero repetido")
          else:
             print("agregue nuevo numero")
@@ -170,7 +174,7 @@ if __name__ == "__main__":
    generate_pulation(maximo, tamaño_poblacion)
    print("----", initial_population,"----")
    poblation = initial_population
-   for i in range(10):
+   for i in range(100):
       print("generacion no.",i+1)
       poblation = seleccion(poblation)
       va1=[]
@@ -182,5 +186,11 @@ if __name__ == "__main__":
       mutation_data = mutation(crossver_data)
       re_translate = tranform_bin_int(mutation_data)
       print(re_translate)
+      if re_translate[0]> maximo:
+         re_translate[0]=50
+      if re_translate[1]>maximo:
+         re_translate[1]=50
+      print("converti ", re_translate)
       poblation.extend(re_translate)
+   generateGraphic(mejorfit_gen, peorfit_gen, promfit_gen)
    
